@@ -35,7 +35,6 @@ app.post('/users',(req,res)=>{
   
   app.route('/users/:id')
   // READ
-  // READ
   .get((req,res)=>{
     User.findById(req.params.id,(err,data)=>{
       if (err){
@@ -58,16 +57,42 @@ app.post('/users',(req,res)=>{
   })
   // UPDATE
   .put((req,res)=>{
-    console.log('in')
-    res.json({success: true,data: 'data'})
-    // User.findByIdAndUpdate()
-  })
-  // DELETE
-  .delete((req,res)=>{
-    // User.findByIdAndDelete()
-  })
-  
-  app.listen(port, ()=>{
-    console.log(`server is listening on port:${port}`)
-  })
-  
+    User.findByIdAndUpdate(
+      req.params.id,
+      {
+        name:req.body.newData.name,
+        email:req.body.newData.email,
+        password:req.body.newData.password
+      },
+      {
+        new:true
+      },
+      (err,data)=>{
+        if (err){
+          res.json({
+            success: false,
+            message: err
+          })
+        } else if (!data){
+          res.json({
+            success: false,
+            message: "Not Found"
+          })
+        } else {
+          res.json({
+            success: true,
+            data: data
+          })
+        }
+      }
+      )
+    })
+    // DELETE
+    .delete((req,res)=>{
+      // User.findByIdAndDelete()
+    })
+    
+    app.listen(port, ()=>{
+      console.log(`server is listening on port:${port}`)
+    })
+    
